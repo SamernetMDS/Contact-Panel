@@ -1,0 +1,201 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-icons/communication-icons.html"
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <seed-element></seed-element>
+
+@demo
+-->
+<dom-module id="contact-panel">
+
+  <style>
+    :host {
+      display: block;
+      box-sizing: border-box;
+    }
+
+      #main {
+          display: flex;
+          flex-direction: row;
+          flex-wrap:wrap;
+      }
+      
+      div.info {
+          display: block;
+          margin: 10px;
+      }
+      
+      div.info .icon, div.info span {
+          line-height: 24px;
+          height: 24px;
+      }
+      
+      .icon {
+          fill: var(--icon-color, #2e80ef);
+      }
+      
+      div.info span {
+          color: var(--content-color, #000);
+      }
+      
+      
+      a {
+          text-decoration: none;
+          color: var(--content-color, #000);
+      }
+      
+  </style>
+
+  <template>
+      <div id="main">
+          
+          <template is="dom-if" if="{{telephone}}">
+          
+          <div id="tel-inf" class="info">
+              <iron-icon class="icon" icon="communication:contact-phone"></iron-icon>
+              <span><a href="tel:{{telephone}}">{{telephone}}</a></span>
+          </div>
+          </template>
+              
+          <template is="dom-if" if="{{email}}">          
+          
+          <div id="email-inf" class="info">
+              <iron-icon class="icon" icon="communication:mail"></iron-icon>
+              <span><a href="mailto:{{email}}">{{email}}</a></span>
+          </div>
+              
+          </template>
+
+          <template is="dom-if" if="{{address.latitude}}">
+              <template is="dom-if" if="{{address.longitude}}">
+                  <template is="dom-if" if="{{address.postal}}">
+                        <div id="adr-inf" class="info">
+                          <iron-icon class="icon" icon="communication:location-on"></iron-icon>
+                          <span><a href="geo:{{address.latitude}},{{address.longitude}}">{{address.postal}}</a></span>
+                      </div>                      
+                  </template>
+              </template>
+          </template>
+                      
+      </div>
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'contact-panel',
+
+    properties: {
+
+      /**
+       * `fancy` indicates that the element should don a monocle and tophat,
+       * while checking its pocket watch.
+       */
+      fancy: Boolean,
+
+      /**
+       * Describes the author of the element, but is really just an excuse to
+       * show off JSDoc annotations.
+       *
+       * @type {{name: string, image: string}}
+       */
+      telephone: {
+        type: String
+      },
+        
+        email: {
+            type: String
+        },
+        
+        address: {
+            type: Object,
+            value: function() {
+              return {
+                longitude:  '',
+                latitude: '',
+                  postal: ''
+              };
+            }
+        },
+
+    },
+
+    // Element Lifecycle
+
+    ready: function() {
+      // `ready` is called after all elements have been configured, but
+      // propagates bottom-up. This element's children are ready, but parents
+      // are not.
+      //
+      // This is the point where you should make modifications to the DOM (when
+      // necessary), or kick off any processes the element wants to perform.
+    },
+
+    attached: function() {
+      // `attached` fires once the element and its parents have been inserted
+      // into a document.
+      //
+      // This is a good place to perform any work related to your element's
+      // visual state or active behavior (measuring sizes, beginning animations,
+      // loading resources, etc).
+        
+        if(this.address.longitude == "")
+            this.$$('#cancelButton').style.display = 'none';
+        
+    },
+
+    detached: function() {
+      // The analog to `attached`, `detached` fires when the element has been
+      // removed from a document.
+      //
+      // Use this to clean up anything you did in `attached`.
+    },
+
+    // Element Behavior
+
+    /**
+     * The `seed-element-lasers` event is fired whenever `fireLasers` is called.
+     *
+     * @event seed-element-lasers
+     * @detail {{sound: String}}
+     */
+
+    /**
+     * Sometimes it's just nice to say hi.
+     *
+     * @param {string} greeting A positive greeting.
+     * @return {string} The full greeting.
+     */
+    sayHello: function(greeting) {
+      var response = greeting || 'Hello World!';
+      return 'seed-element says, ' + response;
+    },
+
+    /**
+     * Attempts to destroy this element's enemies with an any beam of light!
+     *
+     * Or, at least, dispatches an event in the vain hope that someone else will
+     * do the zapping.
+     */
+    fireLasers: function() {
+      this.fire('seed-element-lasers', {sound: 'Pew pew!'});
+    }
+
+  });
+
+</script>
